@@ -9,19 +9,6 @@ import (
 	"time"
 )
 
-type CountsExperiment struct {
-	Runs        int          `json:"runs"`        // number of duplicate trials using the same variables
-	Count       int          `json:"count"`       // number of runs with varying conditions
-	N           int          `json:"n"`           // number of measurements (bytes) per run
-	KeepContent bool         `json:"keepContent"` // whether to keep the content or only a summary
-	Content     []SampleData `json:"content"`     // set of returned sample content (stored if keepContent == true)
-	Avg         float64      `json:"Avg"`         // average of all counts
-}
-
-func (t *CountsExperiment) Lines() float64 {
-	return t.Avg
-}
-
 // Lines returns the number of newline characters in b.
 func Lines(b []byte) (n int) {
 	for _, c := range b {
@@ -90,4 +77,21 @@ func Sample() {
 func init() {
 	// set the random number generator seed
 	rand.Seed(time.Now().UTC().UnixNano())
+}
+
+type trialSet struct {
+	trials []*trial
+}
+
+type CountsExperiment struct {
+	Runs        int       `json:"runs"`        // number of duplicate trials using the same variables
+	Count       int       `json:"count"`       // number of runs with varying conditions
+	N           int       `json:"n"`           // number of measurements (bytes) per run
+	KeepContent bool      `json:"keepContent"` // whether to keep the content or only a summary
+	Contents    []Content `json:"content"`     // set of returned sample content (stored if keepContent == true)
+	Avg         float64   `json:"Avg"`         // average of all counts
+}
+
+func (t *CountsExperiment) Lines() float64 {
+	return t.Avg
 }
